@@ -7,5 +7,6 @@ object SparkStreamingTest {
   def main(args: Array[String]): Unit = {
     val conf = new SparkConf().setMaster("local[2]").setAppName("SparkStreamingTest")
     val ssc = new StreamingContext(conf,Seconds(10))
+
   }
 }
