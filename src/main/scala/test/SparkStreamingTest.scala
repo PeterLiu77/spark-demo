@@ -1,5 +1,6 @@
 package test
 
+import org.apache.spark.sql.SparkSession
 import org.apache.spark.{HashPartitioner, SparkConf, SparkContext}
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 
@@ -13,11 +14,17 @@ object SparkStreamingTest {
     sc.setCheckpointDir("/Users/liupeidong/Desktop")
     ssc.sparkContext.setLogLevel("WARN")
 
+//    val spark = SparkSession.builder().enableHiveSupport().getOrCreate()
+//    import spark.implicits._
+
     // 状态更新函数
     val updateFunc = (iter:Iterator[(String,Seq[Int],Option[Int])]) => {
-      iter.flatMap{
-        case (key,seq,opt) => Some(seq.sum + opt.getOrElse(0)).map(count => (key, count))
-      }
+//      iter.flatMap{
+//        case (key,seq,opt) => Some(seq.sum + opt.getOrElse(0)).map(count => (key, count))
+//      }
+      iter.flatMap(x => {
+        Some(x._2.sum + x._3.getOrElse(0)).map((x._1,_))
+      })
     }
 
     // 业务代码 nc -lk 7777
